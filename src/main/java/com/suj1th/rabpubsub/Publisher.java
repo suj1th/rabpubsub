@@ -19,10 +19,22 @@ public class Publisher {
 	private final static String EXCHANGE = "logs";
 	private final static boolean IS_DURABLE = false;
 
+	
+	private IPublisherUtil publisherUtil;
+
 	@Inject
-	PublisherUtil publisherUtil;
+	public void setPublisherUtil(IPublisherUtil publisherUtil) {
+		this.publisherUtil = publisherUtil;
+	}
+
 	
-	
+	/**
+	 * publishes {@link Message} to RabbitMQ
+	 * 
+	 * @param message
+	 * @return {@link PublishStatus}
+	 * @throws IOException
+	 */
 	public PublishStatus publish(Message message) throws IOException{
 		return publisherUtil.publish(message, EXCHANGE, IS_DURABLE);
 	}

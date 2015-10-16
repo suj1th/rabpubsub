@@ -2,6 +2,9 @@ package com.suj1th.rabpubsub;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.apache.log4j.Logger;
 
 import com.rabbitmq.client.Channel;
@@ -13,19 +16,32 @@ import com.rabbitmq.client.ConnectionFactory;
  * @author suj1th
  *
  */
+@Singleton
 public class PublisherChannelFactory {
 
 	private static ConnectionFactory factory;
 	private static PublisherConnectionConfig config;
-	private static final Connection CONNECTION;
+	private static Connection CONNECTION;
 	
 	private static final Logger LOGGER = Logger.getLogger(PublisherChannelFactory.class);
 	
+	@Inject
+	public static void setConfig(PublisherConnectionConfig config) {
+		PublisherChannelFactory.config = config;
+	}
+
+	/**
+	 * no-args constructor.
+	 *  
+	 */
+	public PublisherChannelFactory(){
+		this.init();
+	}
 	
-	static {
-		Connection localConnectionVariable = null;
+	
+	private void init() {
+		
 		try {
-			config = new PublisherConnectionConfig();
 			
 			factory = new ConnectionFactory();
 			factory.setHost(config.getHost());
@@ -33,7 +49,8 @@ public class PublisherChannelFactory {
 			factory.setUsername(config.getBucket());
 			factory.setPassword(config.getPassword());
 			
-			localConnectionVariable = factory.newConnection();
+			
+			CONNECTION = factory.newConnection();
 			
 		} catch (NumberFormatException e) {
 			LOGGER.error(String.format("Invalid Port Number %s in Configuration",config.getPort()), e);
@@ -43,18 +60,10 @@ public class PublisherChannelFactory {
 			System.exit(1);
 		}
 		
-		CONNECTION = localConnectionVariable;
 	}
 	
-	/**
-	 * private no-args constructor.
-	 *  
-	 */
-	private PublisherChannelFactory(){
-		
-	}
 	
-	public static Channel getChannel() throws IOException{
+	public Channel getChannel() throws IOException{
 		return CONNECTION.createChannel();
 	}
 	

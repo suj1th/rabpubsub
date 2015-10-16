@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 
 @Singleton
-public class MapperService {
+public class MapperService implements IMapperService {
 
     private ObjectMapper jacksonMapper;
 	
@@ -33,45 +33,30 @@ public class MapperService {
     }
 
 
-	/**
-     * Serializes a POJO into a String Object.
-     * 
-     * @param model
-     * @return JSONObject
-     * @throws JsonParseException
-     * @throws JsonMappingException
-     * @throws IOException
-     */
-    public String serialize(Object model) throws JsonParseException, JsonMappingException, IOException {
+	/* (non-Javadoc)
+	 * @see com.suj1th.rabpubsub.IMapperService#serialize(java.lang.Object)
+	 */
+    @Override
+	public String serialize(Object model) throws JsonParseException, JsonMappingException, IOException {
         return this.jacksonMapper.writeValueAsString(model);
     }
 
 
-    /**
-     * Maps a JSON-formatted String Object into a POJO.
-     *
-     * @param document
-     * @param claas
-     * @return model
-     * @throws JsonParseException
-     * @throws JsonMappingException
-     * @throws IOException
-     */
-    public <T> T deserialize(String document, Class<T> claas) throws JsonParseException, JsonMappingException,
+    /* (non-Javadoc)
+	 * @see com.suj1th.rabpubsub.IMapperService#deserialize(java.lang.String, java.lang.Class)
+	 */
+    @Override
+	public <T> T deserialize(String document, Class<T> claas) throws JsonParseException, JsonMappingException,
     IOException {
         return this.jacksonMapper.readValue(document, claas);
     }
 
 
-    /**
-     * @param document
-     * @param claas
-     * @return model
-     * @throws JsonParseException
-     * @throws JsonMappingException
-     * @throws IOException
-     */
-    @SuppressWarnings("unchecked")
+    /* (non-Javadoc)
+	 * @see com.suj1th.rabpubsub.IMapperService#deserialize(java.lang.String, com.fasterxml.jackson.core.type.TypeReference)
+	 */
+    @Override
+	@SuppressWarnings("unchecked")
     public <T> T deserialize(String document, TypeReference<T> claas) throws JsonParseException, JsonMappingException,
     IOException {
         return (T) this.jacksonMapper.readValue(document, claas);
