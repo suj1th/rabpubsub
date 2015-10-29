@@ -27,10 +27,14 @@ public class MapperService implements IMapperService {
 
     private ObjectMapper jacksonMapper;
 	
+    
+    public MapperService(){}
+    
+
     @Inject
-    public MapperService(ObjectMapper jacksonMapper){
-    	this.jacksonMapper=jacksonMapper;
-    }
+	public void setJacksonMapper(ObjectMapper jacksonMapper) {
+		this.jacksonMapper = jacksonMapper;
+	}
 
 
 	/* (non-Javadoc)

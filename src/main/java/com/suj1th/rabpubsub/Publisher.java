@@ -4,39 +4,58 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+
 
 /**
  * @author suj1th
  *
  */
-public class Publisher {
-	
-	/** 
-	 * TODO: 
-	 * decouple exchange name from this class. It should be 
-	 * read from a properties file.
-	 * */
-	private final static String EXCHANGE = "logs";
-	private final static boolean IS_DURABLE = false;
-
+public final class Publisher {
 	
 	private IPublisherUtil publisherUtil;
+	private static Injector injector;
+
+	private final static class PublisherHolder{
+		static {
+			configure();
+		}
+		private final static Publisher PUBLISHER = injector.getInstance(Publisher.class);
+	}
+	
 
 	@Inject
 	public void setPublisherUtil(IPublisherUtil publisherUtil) {
 		this.publisherUtil = publisherUtil;
 	}
 
-	
 	/**
-	 * publishes {@link Message} to RabbitMQ
-	 * 
-	 * @param message
-	 * @return {@link PublishStatus}
-	 * @throws IOException
+	 * no-args constructor.
+	 *  
 	 */
-	public PublishStatus publish(Message message) throws IOException{
-		return publisherUtil.publish(message, EXCHANGE, IS_DURABLE);
-	}
+	 Publisher(){}
+
+	 
+	 private static void configure(){
+		 Publisher.injector = Guice.createInjector(new PublisherInjector());
+	 }
+
+
+	 public static Publisher getInstance(){
+		 return PublisherHolder.PUBLISHER;
+	 }
+
+	 /**
+	  * publishes {@link Message} to RabbitMQ
+	  * 
+	  * @param message
+	  * @return {@link PublishStatus}
+	  * @throws IOException
+	  */
+	 public PublishStatus publish(Message message) throws IOException{
+		 System.out.println(publisherUtil);
+		 return publisherUtil.publish(message);
+	 }
 
 }
