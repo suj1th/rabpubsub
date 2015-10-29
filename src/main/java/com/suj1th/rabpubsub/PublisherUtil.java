@@ -36,8 +36,7 @@ public class PublisherUtil implements IPublisherUtil {
 	}
 
 	@Inject
-	public void setPublisherChannelFactory(
-			PublisherChannelFactory publisherChannelFactory) {
+	public void setPublisherChannelFactory(PublisherChannelFactory publisherChannelFactory) {
 		this.publisherChannelFactory = publisherChannelFactory;
 	}
 
@@ -68,10 +67,10 @@ public class PublisherUtil implements IPublisherUtil {
 			
 
 			/*Serialize Message*/
-			String msg = this.mapper.serialize(message);
+			String serializedMessage = this.mapper.serialize(message);
 
 			/*Publish to Queue*/
-			channel.basicPublish(EXCHANGE, routingKey, null, msg.getBytes());
+			channel.basicPublish(EXCHANGE, routingKey, null, serializedMessage.getBytes());
 		} catch (Exception e) {
 			LOGGER.error("Exception in Publishing Message",e);
 			return PublishStatus.FAILURE;

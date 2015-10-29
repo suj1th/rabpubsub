@@ -2,11 +2,11 @@ package com.suj1th.rabpubsub;
 
 import java.io.IOException;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.apache.log4j.Logger;
-
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -19,26 +19,24 @@ import com.rabbitmq.client.ConnectionFactory;
 @Singleton
 public class PublisherChannelFactory {
 
-	private static ConnectionFactory factory;
-	private static PublisherConnectionConfig config;
-	private static Connection CONNECTION;
+	private ConnectionFactory factory;
+	private PublisherConnectionConfig config;
+	private Connection CONNECTION;
 	
 	private static final Logger LOGGER = Logger.getLogger(PublisherChannelFactory.class);
 	
 	@Inject
-	public static void setConfig(PublisherConnectionConfig config) {
-		PublisherChannelFactory.config = config;
+	public void setConfig(PublisherConnectionConfig config) {
+		this.config = config;
 	}
 
 	/**
 	 * no-args constructor.
 	 *  
 	 */
-	public PublisherChannelFactory(){
-		this.init();
-	}
+	public PublisherChannelFactory(){}
 	
-	
+	@PostConstruct
 	private void init() {
 		
 		try {

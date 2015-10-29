@@ -26,9 +26,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class MapperService implements IMapperService {
 
     private ObjectMapper jacksonMapper;
-	
-    
-    public MapperService(){}
     
 
     @Inject
