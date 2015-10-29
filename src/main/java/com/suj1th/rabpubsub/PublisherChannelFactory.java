@@ -19,15 +19,15 @@ import com.rabbitmq.client.ConnectionFactory;
 @Singleton
 public class PublisherChannelFactory {
 
-	private static ConnectionFactory factory;
-	private static PublisherConnectionConfig config;
-	private static Connection CONNECTION;
+	private ConnectionFactory factory;
+	private PublisherConnectionConfig config;
+	private Connection CONNECTION;
 	
 	private static final Logger LOGGER = Logger.getLogger(PublisherChannelFactory.class);
 	
 	@Inject
-	public static void setConfig(PublisherConnectionConfig config) {
-		PublisherChannelFactory.config = config;
+	public void setConfig(PublisherConnectionConfig config) {
+		this.config = config;
 	}
 
 	/**
@@ -42,13 +42,11 @@ public class PublisherChannelFactory {
 	private void init() {
 		
 		try {
-			
 			factory = new ConnectionFactory();
 			factory.setHost(config.getHost());
 			factory.setPort(Integer.parseInt((config.getPort())));
 			factory.setUsername(config.getBucket());
 			factory.setPassword(config.getPassword());
-			
 			
 			CONNECTION = factory.newConnection();
 			
@@ -64,6 +62,7 @@ public class PublisherChannelFactory {
 	
 	
 	public Channel getChannel() throws IOException{
+		System.out.println(factory);
 		return CONNECTION.createChannel();
 	}
 	
